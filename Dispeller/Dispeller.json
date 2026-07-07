@@ -1,0 +1,16 @@
+{
+    "Author": "pupwife",
+    "Name": "Dispeller",
+    "AssemblyVersion": "1.3",
+    "ApplicableVersion": "any",
+    "DalamudApiLevel": 15,
+    "LoadPriority": 0,
+    "IsHide": "False",
+    "IsTestingExclusive": "False",
+    "Punchline": "Easily clean out your Glamour Dresser.",
+    "Description": "A cute plugin to help you manage your Glamour Dresser by identifying items that share the same visual models.",
+    "Tags": [ "glamour", "dresser", "models", "fashion", "cute", "utility" ],
+    "CategoryTags": [ "Other", "Utility" ],
+    "IconUrl": "https://github.com/NNekoPlugins/Dispeller/Data/Dispeller.png",
+    "RepoUrl": "https://github.com/NNekoPlugins/Dispeller"
+}

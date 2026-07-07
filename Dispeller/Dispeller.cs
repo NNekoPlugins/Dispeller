@@ -1,14 +1,15 @@
-﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
+using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
-using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
-using NNekoTemplate.Windows;
+using Dispeller.Services;
+using Dispeller.Windows;
+using System.IO;
 
-namespace NNekoTemplate;
+namespace Dispeller;
 
-public sealed class NNekoTemplate : IDalamudPlugin
+public sealed class Dispeller : IDalamudPlugin
 {
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
@@ -16,40 +17,37 @@ public sealed class NNekoTemplate : IDalamudPlugin
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
-    private const string CommandName = "/pmycommand";
+    private const string CommandName = "/dispeller";
 
     public Configuration Configuration { get; init; }
+    public DresserScanner DresserScanner { get; init; }
 
-    public readonly WindowSystem WindowSystem = new("NNekoTemplate");
-    private ConfigWindow ConfigWindow { get; init; }
+    public readonly WindowSystem WindowSystem = new("Dispeller");
     private MainWindow MainWindow { get; init; }
 
-    public Plugin()
+    public Dispeller()
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         // You might normally want to embed resources and load them from the manifest stream
-        var iconImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "NNeko.png");
+        var iconImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "Dispeller.png");
 
-        ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this, iconImagePath);
+        DresserScanner = new DresserScanner();
 
-        WindowSystem.AddWindow(ConfigWindow);
+        MainWindow = new MainWindow(this);
+
         WindowSystem.AddWindow(MainWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "A useful message to display in /xlhelp"
+            HelpMessage = "Open Dispeller - Find shared models in your glamour dresser!"
         });
 
         // Tell the UI system that we want our windows to be drawn through the window system
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
-
-        // This adds a button to the plugin installer entry of this plugin which allows
-        // toggling the display status of the configuration ui
-        PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
 
         // Adds another button doing the same but for the main ui of the plugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
@@ -57,19 +55,17 @@ public sealed class NNekoTemplate : IDalamudPlugin
         // Add a simple message to the log with level set to information
         // Use /xllog to open the log window in-game
         // Example Output: 00:57:54.959 | INF | [NNekoTemplate] ===A cool log message from Sample Plugin===
-        Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
+        Log.Information($"===Dispeller plugin loaded! Ready to find shared models!===");
     }
 
     public void Dispose()
     {
         // Unregister all actions to not leak anything during disposal of plugin
         PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
-        PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
-        
+
         WindowSystem.RemoveAllWindows();
 
-        ConfigWindow.Dispose();
         MainWindow.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
@@ -80,7 +76,6 @@ public sealed class NNekoTemplate : IDalamudPlugin
         // In response to the slash command, toggle the display status of our main ui
         MainWindow.Toggle();
     }
-    
-    public void ToggleConfigUi() => ConfigWindow.Toggle();
+
     public void ToggleMainUi() => MainWindow.Toggle();
 }
