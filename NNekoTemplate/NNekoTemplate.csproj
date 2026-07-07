@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Dalamud.NET.Sdk/14.0.2">
+  <PropertyGroup>
+    <Name>NNekoTemplate</Name>
+    <Author>NaughtyNeko</Author>
+    <Punchline>Template for NNekoPlugins Dalamud Plugin Repositories.</Punchline>
+    <Description>Organization Template for NNekoPlugins Dalamud Plugin Repositories.</Description>
+    <Tags>NNeko,NaughtyNeko</Tags>
+    <WarningLevel>4</WarningLevel>
+    <PackageLicenseExpression>APGL-3.0-or-later</PackageLicenseExpression>
+    <!-- Version stamping (GitVersion supplied by CI workflow) -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- Fallback version if GitVersion is not provided -->
+    <Version>0.0.0</Version>
+    <!-- These will be set by /p:GitVersion=1.2.3 in your workflow -->
+    <AssemblyVersion>$(GitVersion)</AssemblyVersion>
+    <FileVersion>$(GitVersion)</FileVersion>
+    <InformationalVersion>$(GitVersion)</InformationalVersion>
+    <Deterministic>true</Deterministic>
+    <CopyLocalLockfileAssemblies>true</CopyLocalLockfileAssemblies>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>$(NoWarn);IDE1006,CS8618,MSB3270</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\Data\**" CopyToOutputDirectory="Always" />
+    <Content Include="NNekoTemplate.json" />
+    <None Update="NNekoTemplate.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <PackageReference Include="ECommons" Version="3.1.0.34" />
+    <PackageReference Update="DotNet.ReproducibleBuilds" Version="2.0.2" />
+  </ItemGroup>
+</Project>
