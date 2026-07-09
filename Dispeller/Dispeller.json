@@ -1,7 +1,7 @@
 {
     "Author": "pupwife",
     "Name": "Dispeller",
-    "AssemblyVersion": "1.4",
+    "AssemblyVersion": "1.5",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 15,
     "LoadPriority": 0,
